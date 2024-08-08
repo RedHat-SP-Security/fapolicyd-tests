@@ -1,0 +1,26 @@
+summary: IPA issue plan for reproducing
+
+prepare:
+  - how: shell
+    script:
+     - systemctl disable --now dnf-makecache.service || true
+     - systemctl disable --now dnf-makecache.timer || true
+     - dnf makecache
+
+discover:
+ - name: Upstream_fapolicyd_tests
+   how: fmf
+   url: https://github.com/RedHat-SP-Security/fapolicyd-tests
+   ref: pk_issue_ipa
+   test:
+     - /Sanity/ipa-integration
+
+adjust:
+  - when: distro == rhel-9 or distro == centos-stream-9
+    prepare+:
+      - how: shell
+        script:
+          - dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm https://dl.fedoraproject.org/pub/epel/epel-next-release-latest-9.noarch.rpm
+
+execute:
+    how: tmt
