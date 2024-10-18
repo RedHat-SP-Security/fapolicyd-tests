@@ -193,6 +193,11 @@ EOF
   tail_pid=$!
 
   local t=$(($(date +%s) + $Timeout))
+
+  
+  rlRun "fapServiceOut"
+  sleep 5
+  bash
   while ! fapServiceOut | grep -q 'Starting to listen for events' \
         && systemctl status fapolicyd > /dev/null; do
     sleep 1
@@ -260,6 +265,34 @@ int main()
 }
 EOF
 
+  cat > ~/rpmbuild/SOURCES/fapTestProgram-second.c << 'EOF'
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main()
+{
+  int num;
+
+  for ( int i=0; i<180; i++ ) {
+    FILE *fptr;
+
+    fptr = fopen("/etc/resolv.conf","r");
+
+    if(fptr == NULL)
+    {
+       printf("Error!");
+       exit(1);
+    }
+
+    fclose(fptr);
+    printf("fapTestProgram-second\n");
+    sleep(10);
+  }
+  return 0;
+}
+EOF
+
   cat > ~/rpmbuild/SPECS/fapTestPackage.spec << EOS
 Name:       fapTestPackage
 Version:    1
@@ -288,18 +321,54 @@ install -m 755 fapTestProgram %{buildroot}/usr/local/bin/fapTestProgram
 %changelog
 # let's skip this for now
 EOS
+
+  cat > ~/rpmbuild/SPECS/fapTestPackage-second.spec << EOS
+Name:       fapTestPackage-second
+Version:    1
+Release:    1
+Summary:    Most simple RPM package
+License:    FIXME
+
+%description
+This is RPM package, containing just a testing script.
+
+%prep
+# let's skip this for now
+
+%build
+gcc -o fapTestProgram-second ../SOURCES/fapTestProgram-second.c
+
+%install
+mkdir -p %{buildroot}/usr/local/bin/
+install -m 755 fapTestProgram-second %{buildroot}/usr/local/bin/fapTestProgram-second
+
+%files
+/usr/local/bin/fapTestProgram-second
+
+#scriptlet
+
+%changelog
+# let's skip this for now
+EOS
+
 }
 
 fapPrepareTestPackages() {
+  ADDITIONAL_PACKAGE=$1
   fapPrepareTestPackageContent
   rlRun "rpmbuild -ba ~/rpmbuild/SPECS/fapTestPackage.spec"
   rlRun "sed -i -r 's/(Version:).*/\1 2/' ~/rpmbuild/SPECS/fapTestPackage.spec"
   rlRun "sed -i -r 's/fapTestProgram/\02/' ~/rpmbuild/SOURCES/fapTestProgram.c"
   rlRun "rpmbuild -ba ~/rpmbuild/SPECS/fapTestPackage.spec"
+  if [ "$ADDITIONAL_PACKAGE" = true ]; then
+      rlRun "rpmbuild -ba ~/rpmbuild/SPECS/fapTestPackage-second.spec"
+      fapTestProgram=/usr/local/bin/fapTestProgram-second
+  fi
   rlRun "mv ~/rpmbuild/RPMS/*/fapTestPackage-* ./"
   rlRun "rm -rf ~/rpmbuild"
   fapTestPackage=( $(find $PWD | grep 'fapTestPackage-' | sort) )
   fapTestProgram=/usr/local/bin/fapTestProgram
+  
 }
 
 fapSetConfigOption() {

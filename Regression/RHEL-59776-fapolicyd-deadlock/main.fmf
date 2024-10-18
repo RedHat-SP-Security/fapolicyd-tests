@@ -1,0 +1,20 @@
+description: fapolicyd deadlocks the system because it got a fatal SIGBUS signal
+contact: Patrik Koncity <dpkoncity@redhat.com>
+test: ./runtest.sh
+require+:
+  - gcc
+  - library(ControlFlow/Cleanup)
+  - library(distribution/testUser)
+  - libzstd-devel
+duration: 10m
+enabled: true
+tag:
+  - Tier3
+tier: 3
+adjust+:
+  - enabled: false
+    when: distro < rhel-9.3
+    continue: false
+extra-nitrate: TC#0612715
+link:
+  - verifies: https://issues.redhat.com/browse/RHEL-15498
