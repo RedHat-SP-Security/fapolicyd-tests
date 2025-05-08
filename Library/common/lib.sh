@@ -259,8 +259,10 @@ int main()
   return 0;
 }
 EOF
+  rlRun "chmod 644 ~/rpmbuild/SOURCES/fapTestProgram.c"
 
-  cat > ~/rpmbuild/SPECS/fapTestPackage.spec << EOS
+
+  cat > ~/rpmbuild/SPECS/fapTestPackage.spec << 'EOS'
 Name:       fapTestPackage
 Version:    1
 Release:    1
@@ -274,7 +276,7 @@ This is RPM package, containing just a testing script.
 # let's skip this for now
 
 %build
-gcc -o fapTestProgram ../SOURCES/fapTestProgram.c
+gcc -o fapTestProgram %{_sourcedir}/fapTestProgram.c
 
 %install
 mkdir -p %{buildroot}/usr/local/bin/
@@ -283,10 +285,9 @@ install -m 755 fapTestProgram %{buildroot}/usr/local/bin/fapTestProgram
 %files
 /usr/local/bin/fapTestProgram
 
-#scriptlet
-
 %changelog
-# let's skip this for now
+* Fri Jan 31 2025 Fapolicyd User <fapolicyd.testing@example.com> - 1.0-1
+- Initial package
 EOS
 }
 
