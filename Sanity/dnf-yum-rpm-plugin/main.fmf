@@ -10,6 +10,7 @@ require+:
   - fapolicyd
   - rpm-plugin-fapolicyd
   - /usr/bin/time
+  - rpm-devel
 duration: 25m
 enabled: true
 component:
