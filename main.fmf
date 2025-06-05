@@ -3,6 +3,7 @@ component:
 require:
   - name: /Library/common
     url: https://github.com/RedHat-SP-Security/fapolicyd-tests
+    ref: pk_enable_packit
     type: library
   - fapolicyd
 recommend:
