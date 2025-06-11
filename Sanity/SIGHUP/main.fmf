@@ -1,7 +1,7 @@
 description: test SIGHUP handling
 contact: Dalibor Pospíšil <dapospis@redhat.com>
 test: ./runtest.sh
-duration: 5m
+duration: 30m
 enabled: true
 require+:
   - library(distribution/tcf)

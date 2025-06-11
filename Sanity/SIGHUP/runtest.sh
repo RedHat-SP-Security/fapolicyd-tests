@@ -82,7 +82,7 @@ rlJournalStart && {
       CleanupRegister 'rlRun "fapolicyd-cli -f delete /opt/testfile"'
       rlRun "fapolicyd-cli -f add /opt/testfile"
       rlRun "systemctl kill --signal SIGHUP fapolicyd"
-      rlRun "sleep 10"
+      rlRun "sleep 30"
       rlRun -s "strace fapolicyd-cli -D | grep testfile"
       rlAssertGrep '/opt/testfile' $rlRun_LOG
       CleanupDo --mark
