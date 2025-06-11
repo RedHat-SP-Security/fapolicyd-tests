@@ -48,7 +48,7 @@ rlJournalStart && {
       rlRun "cat /etc/fapolicyd/rpm-filter.conf"
       rlRun "fapStart"
       rlRun "fapStop"
-      rlRun "fapolicyd-cli -D > trustdb"
+      rlRun "strace fapolicyd-cli -D > trustdb"
       echo 'TrustDB:'
       head trustdb
       echo '...'

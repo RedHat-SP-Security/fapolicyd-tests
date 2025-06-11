@@ -83,7 +83,7 @@ rlJournalStart && {
       rlRun "fapolicyd-cli -f add /opt/testfile"
       rlRun "systemctl kill --signal SIGHUP fapolicyd"
       rlRun "sleep 10"
-      rlRun -s "fapolicyd-cli -D | grep testfile"
+      rlRun -s "strace fapolicyd-cli -D | grep testfile"
       rlAssertGrep '/opt/testfile' $rlRun_LOG
       CleanupDo --mark
     rlPhaseEnd; }

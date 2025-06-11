@@ -125,39 +125,39 @@ rlJournalStart && {
     rlPhaseStartTest "file subcommands AC5 AC6" && {
       tcfChk "file" && {
         $workaround && Stop
-        rlRun "fapolicyd-cli -D >db_dump"
+        rlRun "strace fapolicyd-cli -D >db_dump"
         rlAssertNotGrep "$TESTFILE_FIRST" db_dump -E
         $workaround && Start
         rlRun "fapolicyd-cli -f add $TESTFILE_FIRST"
         Update
         $workaround && Stop
-        rlRun "fapolicyd-cli -D >db_dump"
+        rlRun "strace fapolicyd-cli -D >db_dump"
         rlAssertGrep "$TESTFILE_FIRST" db_dump -E
         $workaround && Start
         rlRun "fapolicyd-cli -f delete $TESTFILE_FIRST"
         Update
         $workaround && Stop
-        rlRun "fapolicyd-cli -D >db_dump"
+        rlRun "strace fapolicyd-cli -D >db_dump"
         rlAssertNotGrep "$TESTFILE_FIRST" db_dump -E
         $workaround && Start; :
       tcfFin; }
       tcfChk "directory" && {
         $workaround && Stop
-        rlRun "fapolicyd-cli -D >db_dump"
+        rlRun "strace fapolicyd-cli -D >db_dump"
         rlAssertNotGrep "$TESTDIR" db_dump -E
         #debugPrompt
         $workaround && Start
         rlRun "fapolicyd-cli -f add $TESTDIR"
         Update
         $workaround && Stop
-        rlRun "fapolicyd-cli -D >db_dump"
+        rlRun "strace fapolicyd-cli -D >db_dump"
         rlAssertGrep "$TESTFILE_SECOND" db_dump -E
         rlAssertGrep "$TESTFILE_THIRD" db_dump -E
         $workaround && Start
         rlRun "fapolicyd-cli -f delete $TESTDIR"
         Update
         $workaround && Stop
-        rlRun "fapolicyd-cli -D >db_dump"
+        rlRun "strace fapolicyd-cli -D >db_dump"
         rlAssertNotGrep "$TESTDIR" db_dump -E
         $workaround && Start; :
       tcfFin; }

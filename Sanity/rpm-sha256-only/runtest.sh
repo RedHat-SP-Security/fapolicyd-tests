@@ -75,7 +75,7 @@ EOF
     rlRun "rm -f /var/lib/fapolicyd/*"
     fapStart
     fapStop
-    rlRun "fapolicyd-cli -D | grep /usr/lib/test_package/test_file.txt"
+    rlRun "strace fapolicyd-cli -D | grep /usr/lib/test_package/test_file.txt"
   rlPhaseEnd; }
 
   rlPhaseStartTest "md5 package with rpm_sha256_only = 0" && {
@@ -84,7 +84,7 @@ EOF
     rlRun "rm -f /var/lib/fapolicyd/*"
     fapStart
     fapStop
-    rlRun "fapolicyd-cli -D | grep /usr/lib/test_package/test_file.txt"
+    rlRun "strace fapolicyd-cli -D | grep /usr/lib/test_package/test_file.txt"
   rlPhaseEnd; }
 
   rlPhaseStartTest "md5 package with rpm_sha256_only = 1" && {
@@ -93,7 +93,7 @@ EOF
     rlRun "rm -f /var/lib/fapolicyd/*"
     fapStart
     fapStop
-    rlRun "fapolicyd-cli -D | grep /usr/lib/test_package/test_file.txt" 1
+    rlRun "strace fapolicyd-cli -D | grep /usr/lib/test_package/test_file.txt" 1
   rlPhaseEnd; }
 
   rlPhaseStartCleanup && {

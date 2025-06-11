@@ -52,19 +52,19 @@ rlJournalStart
     which $comm > /dev/null 2>&1 && rlPhaseStartTest "Packages maintainer: $comm" && {
       CleanupRegister --mark "rlRun '$comm remove -y fapTestPackage'"
       rlRun "fapStop"
-      rlRun "fapolicyd-cli -D | grep $fapTestProgram" 1-255
+      rlRun "strace fapolicyd-cli -D | grep $fapTestProgram" 1-255
       rlRun "fapStart"
       rlRun "$comm install -y ${fapTestPackage[0]}"
       rlRun "fapStop"
-      rlRun "fapolicyd-cli -D | grep $fapTestProgram"
+      rlRun "strace fapolicyd-cli -D | grep $fapTestProgram"
       rlRun "fapStart"
       rlRun "$comm install -y ${fapTestPackage[1]}"
       rlRun "fapStop"
-      rlRun "fapolicyd-cli -D | grep $fapTestProgram"
+      rlRun "strace fapolicyd-cli -D | grep $fapTestProgram"
       rlRun "fapStart"
       CleanupDo --mark
       rlRun "fapStop"
-      rlRun "fapolicyd-cli -D | grep $fapTestProgram" 1-255
+      rlRun "strace fapolicyd-cli -D | grep $fapTestProgram" 1-255
       rlRun "fapStart"
     rlPhaseEnd; }
   done
@@ -72,19 +72,19 @@ rlJournalStart
   rlPhaseStartTest "rpm" && {
     CleanupRegister --mark "rlRun 'rpm -evh fapTestPackage'"
     rlRun "fapStop"
-    rlRun "fapolicyd-cli -D | grep $fapTestProgram" 1-255
+    rlRun "strace fapolicyd-cli -D | grep $fapTestProgram" 1-255
     rlRun "fapStart"
     rlRun "rpm -ivh ${fapTestPackage[0]}"
     rlRun "fapStop"
-    rlRun "fapolicyd-cli -D | grep $fapTestProgram"
+    rlRun "strace fapolicyd-cli -D | grep $fapTestProgram"
     rlRun "fapStart"
     rlRun "rpm -Uvh ${fapTestPackage[1]}"
     rlRun "fapStop"
-    rlRun "fapolicyd-cli -D | grep $fapTestProgram"
+    rlRun "strace fapolicyd-cli -D | grep $fapTestProgram"
     rlRun "fapStart"
     CleanupDo --mark
     rlRun "fapStop"
-    rlRun "fapolicyd-cli -D | grep $fapTestProgram" 1-255
+    rlRun "strace fapolicyd-cli -D | grep $fapTestProgram" 1-255
     rlRun "fapStart"
   rlPhaseEnd; }
 
@@ -98,10 +98,10 @@ rlJournalStart
     rlRun "rpmbuild -ba ~/rpmbuild/SPECS/fapTestPackage.spec"
     pkg=$(ls -1 ~/rpmbuild/RPMS/*/fapTestPackage-*)
 
-    rlRun "fapolicyd-cli -D | grep fapTestProgram" 1-255
+    rlRun "strace fapolicyd-cli -D | grep fapTestProgram" 1-255
     CleanupRegister "rlRun 'rpm -evh fapTestPackage'"
     rlRun -s "yum install -y $pkg"
-    rlRun "fapolicyd-cli -D | grep fapTestProgram" 0
+    rlRun "strace fapolicyd-cli -D | grep fapTestProgram" 0
     rlRun -s "fapServiceOut"
     rlAssertGrep "/usr/local/bin/fapTestProgram" $rlRun_LOG
     CleanupDo --mark

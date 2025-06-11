@@ -84,7 +84,7 @@ rlJournalStart && {
       Trust 'rpmdb'
       CleanupRegister --mark 'rlRun "Stop"'
       rlRun "Start"
-      rlRun "fapolicyd-cli -D > db_dump"
+      rlRun "strace fapolicyd-cli -D > db_dump"
       rlAssertGrep '^rpmdb' db_dump
       rlAssertNotGrep '^filedb' db_dump
       CleanupDo --mark
@@ -94,7 +94,7 @@ rlJournalStart && {
       Trust 'file'
       CleanupRegister --mark 'rlRun "Stop"'
       rlRun "Start"
-      rlRun "fapolicyd-cli -D > db_dump"
+      rlRun "strace fapolicyd-cli -D > db_dump"
       rlAssertNotGrep '^rpmdb' db_dump
       rlAssertGrep '^filedb' db_dump
       CleanupDo --mark
@@ -104,7 +104,7 @@ rlJournalStart && {
       Trust 'rpmdb,file'
       CleanupRegister --mark 'rlRun "Stop"'
       rlRun "Start"
-      rlRun "fapolicyd-cli -D > db_dump"
+      rlRun "strace fapolicyd-cli -D > db_dump"
       rlAssertGrep '^rpmdb' db_dump
       rlAssertGrep '^filedb' db_dump
       rlRun "cat db_dump | cut -d ' ' -f 1 | uniq"
@@ -115,7 +115,7 @@ rlJournalStart && {
       Trust 'file,rpmdb'
       CleanupRegister --mark 'rlRun "Stop"'
       rlRun "Start"
-      rlRun "fapolicyd-cli -D > db_dump"
+      rlRun "strace fapolicyd-cli -D > db_dump"
       rlAssertGrep '^rpmdb' db_dump
       rlAssertGrep '^filedb' db_dump
       rlRun "cat db_dump | cut -d ' ' -f 1 | uniq"
@@ -128,7 +128,7 @@ rlJournalStart && {
       rlRun "cat /etc/fapolicyd/fapolicyd.conf"
       CleanupRegister --mark 'rlRun "Stop"'
       rlRun "Start"
-      rlRun "fapolicyd-cli -D > db_dump"
+      rlRun "strace fapolicyd-cli -D > db_dump"
       rlAssertGrep '^rpmdb' db_dump
       rlAssertGrep '^filedb' db_dump
       CleanupDo --mark
@@ -138,7 +138,7 @@ rlJournalStart && {
       Trust 'file rpmdb'
       CleanupRegister --mark 'rlRun "Stop"'
       rlRun "Start"
-      rlRun "fapolicyd-cli -D > db_dump"
+      rlRun "strace fapolicyd-cli -D > db_dump"
       rlAssertNotGrep '^rpmdb' db_dump
       rlAssertGrep '^filedb' db_dump
       CleanupDo --mark
@@ -167,7 +167,7 @@ rlJournalStart && {
       Trust 'file'
       CleanupRegister --mark 'rlRun "Stop"'
       rlRun "Start"
-      rlRun "fapolicyd-cli -D > db_dump"
+      rlRun "strace fapolicyd-cli -D > db_dump"
       rlAssertNotGrep '^rpmdb' db_dump
       rlAssertNotGrep '^filedb' db_dump
       CleanupDo --mark

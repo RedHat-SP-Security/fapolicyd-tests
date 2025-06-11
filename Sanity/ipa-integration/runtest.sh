@@ -55,7 +55,7 @@ rlJournalStart && {
     rlPhaseStartTest "check trustdb" && {
       rlRun "fapServiceStart"
       rlRun "fapServiceStop"
-      rlRun -s "fapolicyd-cli -D | grep /usr/share | grep '\.jar'"
+      rlRun -s "strace fapolicyd-cli -D | grep /usr/share | grep '\.jar'"
       #rlAssertGrep "" $rlRun_LOG
       rm -f $rlRun_LOG
     rlPhaseEnd; }

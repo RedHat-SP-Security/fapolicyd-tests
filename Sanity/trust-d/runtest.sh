@@ -56,7 +56,7 @@ rlJournalStart && {
       rlRun "fapolicyd-cli -f add ./test_file2 --trust-file trust_file2"
       rlRun "fapolicyd-cli --update"
       rlRun "fapStop"
-      rlRun -s "fapolicyd-cli -D | grep test_file"
+      rlRun -s "strace fapolicyd-cli -D | grep test_file"
       rlAssertGrep 'test_file1' $rlRun_LOG
       rlAssertGrep 'test_file2' $rlRun_LOG
       rm -f $rlRun_LOG
@@ -93,7 +93,7 @@ rlJournalStart && {
       rlRun "cat ./trust_file1 > /etc/fapolicyd/trust.d/trust_file1"
       rlRun "fapStart"
       rlRun "fapStop"
-      rlRun -s "fapolicyd-cli -D | grep test_file"
+      rlRun -s "strace fapolicyd-cli -D | grep test_file"
       rlAssertGrep 'test_file1' $rlRun_LOG
       rlAssertGrep 'test_file2' $rlRun_LOG
       rm -f $rlRun_LOG
@@ -107,7 +107,7 @@ rlJournalStart && {
       rlRun "fapolicyd-cli -f delete ./test_file1 --trust-file trust_file2" 0 "delete a filed only from one trust DB even if there is a duplicate elsewhere"
       rlRun "fapStart"
       rlRun "fapStop"
-      rlRun -s "fapolicyd-cli -D | grep test_file"
+      rlRun -s "strace fapolicyd-cli -D | grep test_file"
       rlAssertGrep 'test_file1' $rlRun_LOG
       rlAssertGrep 'test_file2' $rlRun_LOG
       rm -f $rlRun_LOG
@@ -137,7 +137,7 @@ rlJournalStart && {
       rlRun "cat ./trust_file1 > /etc/fapolicyd/trust.d/trust_file1"
       rlRun "fapStart"
       rlRun "fapStop"
-      rlRun -s "fapolicyd-cli -D | grep test_file"
+      rlRun -s "strace fapolicyd-cli -D | grep test_file"
       rlAssertGrep 'test_file1' $rlRun_LOG
       rlAssertGrep 'test_file2' $rlRun_LOG
       rm -f $rlRun_LOG
@@ -157,7 +157,7 @@ rlJournalStart && {
       rm -f $rlRun_LOG
       rlRun "fapStart"
       rlRun "fapStop"
-      rlRun -s "fapolicyd-cli -D | grep test_file"
+      rlRun -s "strace fapolicyd-cli -D | grep test_file"
       rlAssertNotGrep 'test_file1' $rlRun_LOG
       rm -f $rlRun_LOG
       CleanupDo --mark

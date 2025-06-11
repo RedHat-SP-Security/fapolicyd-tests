@@ -83,7 +83,7 @@ EOF
             rlRun "systemctl is-active fapolicyd" 0 "Verify fapolicyd is active"
             rlRun "rpm -q $fapTestPackage1" 0 "Verify package is installed"
             rlRun "fapStop"
-            rlRun "fapolicyd-cli -D | grep fapTestProgram" 0 "Verify package is trusted by fapolicyd"
+            rlRun "strace fapolicyd-cli -D | grep fapTestProgram" 0 "Verify package is trusted by fapolicyd"
 
             fapTestPackage2=$(ls -1 | grep fap | sed -n '2p')
             rlRun "bootc image copy-to-storage"
@@ -115,7 +115,7 @@ EOF
             rlRun "systemctl is-active fapolicyd" 0 "Verify fapolicyd is active"
             rlRun "rpm -q $fapTestPackage2" 0 "Verify package is installed"
             rlRun "fapStop"
-            rlRun "fapolicyd-cli -D | grep fapTestProgram" 0 "Verify package is trusted by fapolicyd"
+            rlRun "strace fapolicyd-cli -D | grep fapTestProgram" 0 "Verify package is trusted by fapolicyd"
 
             rlRun "rm -f $COOKIE_2"
         rlPhaseEnd
