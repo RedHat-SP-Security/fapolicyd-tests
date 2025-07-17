@@ -7,6 +7,7 @@ test: ./runtest.sh
 require+:
 - library(distribution/dpcommon)
 - library(distribution/ConditionalPhases)
+- gdb
 recommend:
 - fapolicyd
 duration: 5m

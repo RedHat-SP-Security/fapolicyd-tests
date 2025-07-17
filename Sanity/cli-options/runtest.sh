@@ -83,7 +83,34 @@ rlJournalStart && {
       $workaround && Stop
       opts="-D --dump-db"
       for opt in $opts; do
-        rlRun "fapolicyd-cli $opt > /dev/null"
+        if [ "$opt" = "-D" ]; then
+          CMD="fapolicyd-cli -D > /dev/null"
+          TIMEOUT=5
+          LOGFILE="gdb_output.txt"
+          eval "$CMD" &
+          PID=$!
+          # Background monitor for timeout
+          (
+            sleep "$TIMEOUT"
+            if kill -0 "$PID" 2>/dev/null; then
+              echo "Process $PID is still running after ${TIMEOUT}s. Attaching GDB..."
+              gdb -q -n -batch \
+                  -ex "set pagination off" \
+                  -ex "attach $PID" \
+                  -ex "thread apply all bt full" \
+                  -ex "detach" \
+                  -ex "quit" \
+                  &> "$LOGFILE"
+                  echo "GDB backtrace written to $LOGFILE"
+                  # Optional: Kill the stuck process after GDB is done
+                  kill -9 "$PID"
+              fi
+          ) &
+          # Wait for the original process to finish (or get killed)
+          wait "$PID" 2>/dev/null || true
+        else
+          rlRun "fapolicyd-cli $opt > /dev/null"
+        fi
       done
       opts="-d --delete-db"
       for opt in $opts; do
