@@ -68,7 +68,7 @@ rlJournalStart
         checkFile /var/log/fapolicyd-access.log fapolicyd fapolicyd
 
         # check /run files
-        checkFile -e /run/fapolicyd root fapolicyd
+        (( rlIsRHELLike 9 && rlIsRHELLike ">=9.7" ) || rlIsRHELLike ">=10.1" ) && checkFile -e /run/fapolicyd root fapolicyd
         checkFile -e /run/fapolicyd/fapolicyd.fifo root fapolicyd
 
         # check /usr files
