@@ -40,7 +40,7 @@ function checkFile() {
     GROUP=$3
     if "$MUSTEXIST" || [ -e "$FILEPATH" ]; then
         ls -ld $FILEPATH
-        rlRun "ls -ld $FILEPATH | grep -qE '$OWNER[ ]*$GROUP'"
+        rlRun "ls -ld $FILEPATH | grep -qE '$OWNER[ ]*$GROUP'" 0 "Check ownership of $FILEPATH ($OWNER:$GROUP)"
     fi
 }
 
@@ -48,7 +48,7 @@ rlJournalStart
 
     rlPhaseStartTest
         rlServiceStart fapolicyd
-        rlRun "systemctl status fapolicyd" 0 "Confirm that fapolicyd is running"
+        rlRun "rlServiceStatus fapolicyd" 0 "Confirm that fapolicyd is running"
 
         rlRun -s "id fapolicyd"
         PATTERN="[0-9]+\(fapolicyd\)"
@@ -68,7 +68,7 @@ rlJournalStart
         checkFile /var/log/fapolicyd-access.log fapolicyd fapolicyd
 
         # check /run files
-        checkFile -e /run/fapolicyd root fapolicyd
+        ( ! rlIsRHEL "<9.7" && ! rlIsRHEL "10.0" && ! rlIsFedora "<43" ) && checkFile -e /run/fapolicyd root fapolicyd
         checkFile -e /run/fapolicyd/fapolicyd.fifo root fapolicyd
 
         # check /usr files
